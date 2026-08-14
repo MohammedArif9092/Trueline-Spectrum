@@ -1,0 +1,145 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Trueline Spectrum — global editorial base styles.
+   Palette is strictly: green #00A99D, navy #002C71, gray #5E5858, white #FFFFFF. */
+
+:root {
+  --brand-green: #00a99d;
+  --brand-navy: #002c71;
+  --brand-gray: #5e5858;
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-white text-stone-800 font-sans antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-serif text-navy;
+    text-wrap: balance;
+  }
+  a {
+    @apply transition-colors;
+  }
+  ::selection {
+    background: rgba(0, 169, 157, 0.2);
+  }
+  /* Consistent, restrained focus ring in brand green */
+  :focus-visible {
+    outline: 2px solid var(--brand-green);
+    outline-offset: 2px;
+  }
+}
+
+@layer components {
+  .container-editorial {
+    @apply mx-auto w-full max-w-editorial px-4 sm:px-6 lg:px-8;
+  }
+
+  /* Section heading with a green rule — the recurring editorial motif */
+  .section-kicker {
+    @apply flex items-center gap-3 mb-6;
+  }
+  .section-kicker h2 {
+    @apply text-xl sm:text-2xl font-bold tracking-tight;
+  }
+  .section-rule {
+    @apply h-px flex-1 bg-stone-200;
+  }
+
+  .kicker-label {
+    @apply inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-green-600;
+  }
+
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-md px-4 py-2.5 text-sm font-semibold transition-colors focus-visible:outline-none disabled:opacity-60 disabled:pointer-events-none;
+  }
+  .btn-primary {
+    @apply btn bg-green text-white hover:bg-green-600;
+  }
+  .btn-navy {
+    @apply btn bg-navy text-white hover:bg-navy-600;
+  }
+  .btn-outline {
+    @apply btn border border-navy/20 text-navy hover:bg-navy hover:text-white;
+  }
+  .btn-ghost {
+    @apply btn text-navy hover:bg-navy-50;
+  }
+
+  .badge-cat {
+    @apply inline-block text-[11px] font-semibold uppercase tracking-wider text-green-600;
+  }
+  .meta {
+    @apply text-sm text-stone-500;
+  }
+
+  .link-underline {
+    @apply text-navy hover:text-green-600;
+  }
+
+  /* Editorial long-form typography for article bodies */
+  .prose-editorial {
+    @apply text-stone-700 leading-relaxed;
+  }
+  .prose-editorial p {
+    @apply mb-6 text-[1.075rem];
+  }
+  .prose-editorial h2 {
+    @apply mt-10 mb-4 text-2xl font-bold;
+  }
+  .prose-editorial h3 {
+    @apply mt-8 mb-3 text-xl font-bold;
+  }
+  .prose-editorial ul {
+    @apply mb-6 list-disc pl-6 space-y-2;
+  }
+  .prose-editorial ol {
+    @apply mb-6 list-decimal pl-6 space-y-2;
+  }
+  .prose-editorial a {
+    @apply text-green-600 underline underline-offset-2 hover:text-green-700;
+  }
+  .prose-editorial blockquote {
+    @apply my-8 border-l-4 border-green pl-5 italic text-navy;
+  }
+  .prose-editorial img {
+    @apply my-8 rounded-lg;
+  }
+
+  /* Advertisement placeholder frame */
+  .ad-slot {
+    @apply flex items-center justify-center rounded-md border border-dashed border-stone-200 bg-stone-50 text-[11px] font-medium uppercase tracking-widest text-stone-400;
+  }
+
+  /* Card hover image treatment */
+  .img-hover {
+    @apply overflow-hidden;
+  }
+  .img-hover img {
+    @apply transition-transform duration-500 will-change-transform;
+  }
+  .img-hover:hover img {
+    @apply scale-105;
+  }
+}
+
+/* Line clamp utilities (native support) */
+.clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
