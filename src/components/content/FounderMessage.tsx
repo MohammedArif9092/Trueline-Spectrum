@@ -1,4 +1,5 @@
-import { Linkedin, Mail } from "lucide-react";
+import { Facebook, Instagram, Linkedin, MessageCircle, Phone } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 import { SmartImage } from "@/components/content/SmartImage";
 
 export type FounderData = {
@@ -12,12 +13,53 @@ export type FounderData = {
 
 const DEFAULT_PHOTO = "/founder/founder.jpg";
 
-// Safe, non-biographical placeholder shown until the message is set in the CMS.
-const DEFAULT_MESSAGE = `Trueline Spectrum was founded on a simple conviction: that the work of researchers, educators, technologists and entrepreneurs deserves to be told with clarity, rigour and respect.
+// Approved founder identity for the Trueline Spectrum About page.
+const FOUNDER_NAME = "Dr. V. NAGARAJ";
 
-We built this monthly edition to connect the people and institutions shaping education, research, technology, industry and innovation — and to make their ideas accessible to a wider community.
+const FOUNDER_MESSAGE = `M.E., M.B.A., Ph.D. from Anna University and Post Doctorate Fellowship from University of South Florida (USA). With over 13 years of experience in academic publishing, research, and innovation, I founded Trueline Spectrum in 2026 with a vision to create a trusted monthly platform that connects education, research, technology, industry, and innovation. Trueline Spectrum is committed to bringing forward meaningful ideas, emerging technologies, research developments, and the people shaping the future.
 
-Every issue is an invitation to look closely at how knowledge moves from the laboratory to the world, and to imagine what we can build together.`;
+Our mission is to bridge the gap between knowledge and its real-world impact by highlighting researchers, educators, technologists, entrepreneurs, startups, institutions, and industry leaders. Through every monthly edition, we aim to showcase important developments, innovative ideas, research breakthroughs, technology trends, educational initiatives, and industry perspectives in a clear, credible, and accessible format.
+
+Through Trueline Spectrum, we are building a connected knowledge ecosystem that encourages collaboration between academia, research, industry, startups, and innovators. We believe that meaningful stories can inspire new ideas, create partnerships, accelerate innovation, and contribute to a stronger future for society.`;
+
+// Founder social / contact links, in the order they should appear.
+const SOCIAL_LINKS: {
+  label: string;
+  href: string;
+  icon: LucideIcon;
+  external: boolean;
+}[] = [
+  {
+    label: "LinkedIn",
+    href: "https://www.linkedin.com/in/nagaraj-varatharaj/",
+    icon: Linkedin,
+    external: true,
+  },
+  {
+    label: "Instagram",
+    href: "https://www.instagram.com/nagaraj_varatharaj?igsh=NXR2N2JybDlicDR2",
+    icon: Instagram,
+    external: true,
+  },
+  {
+    label: "Facebook",
+    href: "https://www.facebook.com/nagaraj.varatharaj.3",
+    icon: Facebook,
+    external: true,
+  },
+  {
+    label: "WhatsApp",
+    href: "https://api.whatsapp.com/message/7NHZKTMAKDIWJ1?autoload=1&app_absent=0",
+    icon: MessageCircle,
+    external: true,
+  },
+  {
+    label: "Call Dr. V. NAGARAJ",
+    href: "tel:+919578873584",
+    icon: Phone,
+    external: false,
+  },
+];
 
 function paragraphs(text: string): string[] {
   return text
@@ -28,8 +70,7 @@ function paragraphs(text: string): string[] {
 
 export function FounderMessage({ founder }: { founder: FounderData }) {
   const photo = founder.photo?.trim() || DEFAULT_PHOTO;
-  const message = founder.message?.trim() || DEFAULT_MESSAGE;
-  const name = founder.name?.trim();
+  const name = FOUNDER_NAME;
   const title = founder.title?.trim();
 
   return (
@@ -42,7 +83,7 @@ export function FounderMessage({ founder }: { founder: FounderData }) {
               <SmartImage
                 src={photo}
                 fallbackSrc={DEFAULT_PHOTO}
-                alt={name ? `${name}, Founder of Trueline Spectrum` : "Founder of Trueline Spectrum"}
+                alt={`${name}, Founder of Trueline Spectrum`}
                 fill
                 sizes="(max-width: 1024px) 90vw, 440px"
                 className="object-cover object-top"
@@ -62,44 +103,31 @@ export function FounderMessage({ founder }: { founder: FounderData }) {
               Founder Message
             </h2>
 
-            {(name || title) && (
-              <p className="mt-4 text-lg font-semibold text-navy">
-                {name}
-                {name && title && <span className="text-stone-400"> — </span>}
-                {title && <span className="font-medium text-stone-500">{title}</span>}
-              </p>
-            )}
+            <p className="mt-4 text-lg font-semibold text-navy">
+              {name}
+              {title && <span className="text-stone-400"> — </span>}
+              {title && <span className="font-medium text-stone-500">{title}</span>}
+            </p>
 
             <div className="mt-6 space-y-5 text-[1.075rem] leading-relaxed text-stone-700">
-              {paragraphs(message).map((p, i) => (
+              {paragraphs(FOUNDER_MESSAGE).map((p, i) => (
                 <p key={i}>{p}</p>
               ))}
             </div>
 
-            {(founder.linkedin || founder.email) && (
-              <div className="mt-8 flex items-center gap-3">
-                {founder.linkedin && (
-                  <a
-                    href={founder.linkedin}
-                    target="_blank"
-                    rel="noreferrer"
-                    aria-label={name ? `${name} on LinkedIn` : "Founder on LinkedIn"}
-                    className="rounded-md border border-navy/15 p-2.5 text-navy transition-colors hover:border-green hover:bg-green hover:text-white"
-                  >
-                    <Linkedin className="h-4 w-4" />
-                  </a>
-                )}
-                {founder.email && (
-                  <a
-                    href={`mailto:${founder.email}`}
-                    aria-label={name ? `Email ${name}` : "Email the founder"}
-                    className="rounded-md border border-navy/15 p-2.5 text-navy transition-colors hover:border-green hover:bg-green hover:text-white"
-                  >
-                    <Mail className="h-4 w-4" />
-                  </a>
-                )}
-              </div>
-            )}
+            <div className="mt-8 flex flex-wrap items-center gap-3">
+              {SOCIAL_LINKS.map(({ label, href, icon: Icon, external }) => (
+                <a
+                  key={label}
+                  href={href}
+                  aria-label={label}
+                  {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+                  className="rounded-md border border-navy/15 p-2.5 text-navy transition-colors hover:border-green hover:bg-green hover:text-white"
+                >
+                  <Icon className="h-4 w-4" />
+                </a>
+              ))}
+            </div>
           </div>
         </div>
       </div>
