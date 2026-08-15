@@ -583,6 +583,15 @@ async function main() {
     social_linkedin: "https://www.linkedin.com",
     social_x: "https://x.com",
     social_youtube: "",
+    // Founder / Leadership (About page). Name/title left blank for the admin to
+    // enter genuine details; message is a safe, non-biographical placeholder.
+    founderName: "",
+    founderTitle: "Founder, Trueline Spectrum",
+    founderMessage:
+      "Trueline Spectrum was founded on a simple conviction: that the work of researchers, educators, technologists and entrepreneurs deserves to be told with clarity, rigour and respect.\n\nWe built this monthly edition to connect the people and institutions shaping education, research, technology, industry and innovation — and to make their ideas accessible to a wider community.\n\nEvery issue is an invitation to look closely at how knowledge moves from the laboratory to the world, and to imagine what we can build together.",
+    founderPhoto: "/founder/founder.jpg",
+    founderLinkedin: "",
+    founderEmail: "truelinebiomed@gmail.com",
   };
   for (const [key, value] of Object.entries(settings)) {
     await prisma.siteSetting.create({ data: { key, value } });

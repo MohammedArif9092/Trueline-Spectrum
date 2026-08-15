@@ -9,7 +9,7 @@ export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
   title: "News",
   description:
-    "The latest news across technology, AI, research, education, industry and startups from Trueline Spectrum.",
+    "Science and technology news across AI, research, education, industry and startups, from the Trueline Spectrum monthly edition.",
 };
 
 export default async function NewsPage() {
@@ -17,9 +17,9 @@ export default async function NewsPage() {
   return (
     <div className="pb-8">
       <PageHeader
-        kicker="From the newsroom"
+        kicker="This month in news"
         title="News"
-        description="The latest reporting across technology, AI, research, education, industry and startups."
+        description="Science and technology reporting across AI, research, education, industry and startups — curated for this month's edition."
         breadcrumb={[{ label: "News" }]}
       />
       <div className="container-editorial py-10">

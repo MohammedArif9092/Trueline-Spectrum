@@ -18,10 +18,12 @@ import { NewsletterSection } from "@/components/home/NewsletterSection";
 export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
-  const sections = await getHomepageSections();
-
-  // Shared article pools (fetched once, de-duplicated across the top sections).
-  const featured = await getFeaturedArticle();
+  // Independent queries run together; the article pools chain only where the
+  // exclude-list genuinely depends on the previous result.
+  const [sections, featured] = await Promise.all([
+    getHomepageSections(),
+    getFeaturedArticle(),
+  ]);
   const featuredId = featured?.id ? [featured.id] : [];
   const topStories = await getTopStories(5, featuredId);
   const usedIds = [...featuredId, ...topStories.map((a) => a.id)];

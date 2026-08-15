@@ -26,6 +26,23 @@ export default async function Page() {
           <Field label="X (Twitter) URL"><Input name="social_x" defaultValue={s.social_x ?? ""} /></Field>
           <Field label="YouTube URL"><Input name="social_youtube" defaultValue={s.social_youtube ?? ""} /></Field>
         </Card>
+        <Card className="mt-6 space-y-4">
+          <h3 className="text-sm font-bold uppercase tracking-wider text-stone-400">Founder / Leadership</h3>
+          <p className="text-xs text-stone-400">
+            Shown in the Founder Message section on the{" "}
+            <a href="/about" target="_blank" rel="noreferrer" className="text-green-600 hover:underline">About page</a>.
+          </p>
+          <Field label="Founder Name"><Input name="founderName" defaultValue={s.founderName ?? ""} placeholder="e.g. Dr. A. Kumar" /></Field>
+          <Field label="Founder Title / Role"><Input name="founderTitle" defaultValue={s.founderTitle ?? ""} placeholder="Founder & Editor-in-Chief" /></Field>
+          <Field label="Founder Message" hint="Blank lines separate paragraphs.">
+            <Textarea name="founderMessage" defaultValue={s.founderMessage ?? ""} className="min-h-[180px]" />
+          </Field>
+          <Field label="Founder Photo URL" hint="Leave blank to use the default photo in /public/founder.">
+            <Input name="founderPhoto" defaultValue={s.founderPhoto ?? ""} placeholder="/founder/founder.jpg" />
+          </Field>
+          <Field label="Founder LinkedIn URL"><Input name="founderLinkedin" defaultValue={s.founderLinkedin ?? ""} /></Field>
+          <Field label="Founder Email"><Input name="founderEmail" type="email" defaultValue={s.founderEmail ?? ""} /></Field>
+        </Card>
         <div className="mt-6"><SubmitButton label="Save Settings" /></div>
       </form>
     </div>

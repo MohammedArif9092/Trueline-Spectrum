@@ -1,10 +1,3 @@
-// Trueline Spectrum — Data model
-// Dev uses SQLite for zero-setup local development.
-// PostgreSQL-portable: to migrate, change `provider` to "postgresql" and point
-// DATABASE_URL at your Postgres instance. No arrays / native enums are used, so
-// the schema maps cleanly to both engines. Enum-like fields are validated in the
-// application layer (see src/lib/constants.ts).
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -14,21 +7,16 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// ---------------------------------------------------------------------------
-// Administration & security
-// ---------------------------------------------------------------------------
-
 model Admin {
   id           String     @id @default(cuid())
   email        String     @unique
   name         String
   passwordHash String
-  role         String     @default("EDITOR") // OWNER | ADMIN | EDITOR
+  role         String     @default("EDITOR")
   active       Boolean    @default(true)
   lastLoginAt  DateTime?
   createdAt    DateTime   @default(now())
   updatedAt    DateTime   @updatedAt
-
   articles     Article[]  @relation("AuthoredByAdmin")
   auditLogs    AuditLog[]
 }
@@ -36,33 +24,26 @@ model Admin {
 model AuditLog {
   id        String   @id @default(cuid())
   adminId   String?
-  admin     Admin?   @relation(fields: [adminId], references: [id], onDelete: SetNull)
-  action    String   // CREATE | UPDATE | DELETE | PUBLISH | LOGIN | LOGOUT ...
-  entity    String   // Article | Event | Magazine ...
+  action    String
+  entity    String
   entityId  String?
   detail    String?
   createdAt DateTime @default(now())
+  admin     Admin?   @relation(fields: [adminId], references: [id])
 
   @@index([entity, entityId])
   @@index([createdAt])
 }
 
-// ---------------------------------------------------------------------------
-// Taxonomy & people
-// ---------------------------------------------------------------------------
-
 model Category {
   id          String    @id @default(cuid())
   name        String    @unique
   slug        String    @unique
-  // Top-level nav bucket this category rolls up to:
-  // news | technology | ai | research | education | industry | startups | events | science
   section     String    @default("news")
   description String?
   order       Int       @default(0)
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
-
   articles    Article[]
 
   @@index([section])
@@ -73,7 +54,6 @@ model Tag {
   name      String       @unique
   slug      String       @unique
   createdAt DateTime     @default(now())
-
   articles  ArticleTag[]
 }
 
@@ -81,19 +61,14 @@ model Author {
   id        String    @id @default(cuid())
   name      String
   slug      String    @unique
-  title     String?   // e.g. "Senior Editor, Research"
+  title     String?
   bio       String?
   avatar    String?
   email     String?
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
-
   articles  Article[]
 }
-
-// ---------------------------------------------------------------------------
-// Core editorial content
-// ---------------------------------------------------------------------------
 
 model Article {
   id             String       @id @default(cuid())
@@ -101,36 +76,29 @@ model Article {
   slug           String       @unique
   subtitle       String?
   excerpt        String?
-  content        String       // rich text / HTML
+  content        String
   featuredImage  String?
   imageCaption   String?
-
   authorId       String?
-  author         Author?      @relation(fields: [authorId], references: [id], onDelete: SetNull)
   createdById    String?
-  createdBy      Admin?       @relation("AuthoredByAdmin", fields: [createdById], references: [id], onDelete: SetNull)
-
   categoryId     String?
-  category       Category?    @relation(fields: [categoryId], references: [id], onDelete: SetNull)
-  tags           ArticleTag[]
-
-  status         String       @default("DRAFT") // DRAFT|PENDING|APPROVED|SCHEDULED|PUBLISHED|ARCHIVED|REJECTED
-  featured       Boolean      @default(false)   // eligible for homepage hero
-  trending       Boolean      @default(false)   // eligible for trending ticker / list
-  premium        Boolean      @default(false)   // premium-gated content
-  priority       Int          @default(0)       // manual ordering weight
-
+  status         String       @default("DRAFT")
+  featured       Boolean      @default(false)
+  trending       Boolean      @default(false)
+  premium        Boolean      @default(false)
+  priority       Int          @default(0)
   readingMinutes Int          @default(4)
   views          Int          @default(0)
-
   publishedAt    DateTime?
   scheduledFor   DateTime?
-
   seoTitle       String?
   seoDescription String?
-
   createdAt      DateTime     @default(now())
   updatedAt      DateTime     @updatedAt
+  author         Author?      @relation(fields: [authorId], references: [id])
+  category       Category?    @relation(fields: [categoryId], references: [id])
+  createdBy      Admin?       @relation("AuthoredByAdmin", fields: [createdById], references: [id])
+  tags           ArticleTag[]
 
   @@index([status, publishedAt])
   @@index([categoryId])
@@ -148,17 +116,12 @@ model ArticleTag {
   @@index([tagId])
 }
 
-// ---------------------------------------------------------------------------
-// Research & innovation
-// ---------------------------------------------------------------------------
-
 model Research {
   id               String    @id @default(cuid())
   title            String
   slug             String    @unique
   summary          String
   content          String?
-  // research | publication | patent | innovation
   researchCategory String    @default("research")
   institution      String?
   researchers      String?
@@ -175,10 +138,6 @@ model Research {
   @@index([status])
 }
 
-// ---------------------------------------------------------------------------
-// Events
-// ---------------------------------------------------------------------------
-
 model Event {
   id              String    @id @default(cuid())
   name            String
@@ -187,12 +146,11 @@ model Event {
   endDate         DateTime?
   time            String?
   location        String?
-  mode            String    @default("in-person") // in-person | online | hybrid
+  mode            String    @default("in-person")
   description     String
   organizer       String?
   registrationUrl String?
   image           String?
-  // conference | seminar | workshop | fdp | hackathon | webinar | expo | innovation
   category        String    @default("conference")
   status          String    @default("DRAFT")
   featured        Boolean   @default(false)
@@ -202,15 +160,10 @@ model Event {
   @@index([status, startDate])
 }
 
-// ---------------------------------------------------------------------------
-// Organizations / institutions
-// ---------------------------------------------------------------------------
-
 model Organization {
   id           String   @id @default(cuid())
   name         String
   slug         String   @unique
-  // university | college | research-center | incubation | startup | company | gcc
   type         String   @default("university")
   logo         String?
   coverImage   String?
@@ -220,7 +173,7 @@ model Organization {
   contactEmail String?
   contactPhone String?
   founded      String?
-  achievements String?  // free text / newline separated
+  achievements String?
   status       String   @default("PUBLISHED")
   featured     Boolean  @default(false)
   createdAt    DateTime @default(now())
@@ -230,49 +183,40 @@ model Organization {
   @@index([status])
 }
 
-// ---------------------------------------------------------------------------
-// Digital magazine
-// ---------------------------------------------------------------------------
-
 model Magazine {
-  id            String         @id @default(cuid())
-  editionTitle  String
-  slug          String         @unique
-  month         String
-  year          Int
-  coverImage    String
-  description    String?
-  theme         String?        // editorial theme line, e.g. "AI, Innovation & the Future of Industry"
-  status        String         @default("DRAFT")
-  isCurrent     Boolean        @default(false)
-  featured      Boolean        @default(false)
-  publishedAt   DateTime?
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @updatedAt
-
-  pages         MagazinePage[]
+  id           String         @id @default(cuid())
+  editionTitle String
+  slug         String         @unique
+  month        String
+  year         Int
+  coverImage   String
+  description  String?
+  theme        String?
+  status       String         @default("DRAFT")
+  isCurrent    Boolean        @default(false)
+  featured     Boolean        @default(false)
+  publishedAt  DateTime?
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  pages        MagazinePage[]
 
   @@index([status, year, month])
 }
 
 model MagazinePage {
-  id          String   @id @default(cuid())
-  magazineId  String
-  magazine    Magazine @relation(fields: [magazineId], references: [id], onDelete: Cascade)
-  pageNumber  Int
-  title       String?  // used in the table of contents
-  image       String?  // page render image (online reader)
-  body        String?  // optional article text for search / accessibility
-  isSection   Boolean  @default(false) // TOC section divider
-  createdAt   DateTime @default(now())
+  id         String   @id @default(cuid())
+  magazineId String
+  pageNumber Int
+  title      String?
+  image      String?
+  body       String?
+  isSection  Boolean  @default(false)
+  createdAt  DateTime @default(now())
+  magazine   Magazine @relation(fields: [magazineId], references: [id], onDelete: Cascade)
 
   @@unique([magazineId, pageNumber])
   @@index([magazineId])
 }
-
-// ---------------------------------------------------------------------------
-// Media, advertising, marketing, configuration
-// ---------------------------------------------------------------------------
 
 model MediaAsset {
   id        String   @id @default(cuid())
@@ -291,11 +235,10 @@ model MediaAsset {
 model Advertisement {
   id        String   @id @default(cuid())
   name      String
-  // header | homepage | article | sidebar | magazine
   placement String   @default("sidebar")
   imageUrl  String?
   linkUrl   String?
-  html      String?  // optional custom creative
+  html      String?
   active    Boolean  @default(true)
   priority  Int      @default(0)
   createdAt DateTime @default(now())
@@ -308,7 +251,7 @@ model NewsletterSubscriber {
   id        String   @id @default(cuid())
   email     String   @unique
   active    Boolean  @default(true)
-  source    String?  // homepage | footer | article
+  source    String?
   createdAt DateTime @default(now())
 }
 
@@ -316,10 +259,10 @@ model PremiumPlan {
   id          String   @id @default(cuid())
   name        String
   slug        String   @unique
-  priceLabel  String   // "Free", "₹499", etc. — display only, no billing
-  interval    String?  // "month" | "year" | null
+  priceLabel  String
+  interval    String?
   tagline     String?
-  features    String   // JSON-encoded array of strings
+  features    String
   highlighted Boolean  @default(false)
   order       Int      @default(0)
   active      Boolean  @default(true)
@@ -327,19 +270,17 @@ model PremiumPlan {
   updatedAt   DateTime @updatedAt
 }
 
-// Controls which homepage sections render and in what order.
 model HomepageSection {
   id        String   @id @default(cuid())
-  key       String   @unique // hero | topStories | latest | research | education | industry | startups | events | magazine | premium | newsletter
+  key       String   @unique
   title     String
   subtitle  String?
   enabled   Boolean  @default(true)
   order     Int      @default(0)
-  config    String?  // JSON-encoded per-section config (e.g. item counts)
+  config    String?
   updatedAt DateTime @updatedAt
 }
 
-// Slim horizontal ticker items (CMS-controlled), independent of trending flags.
 model TickerItem {
   id        String   @id @default(cuid())
   label     String

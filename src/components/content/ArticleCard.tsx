@@ -1,7 +1,7 @@
 import Link from "next/link";
-import Image from "next/image";
 import { Lock } from "lucide-react";
 import { formatDateShort, links, cn } from "@/lib/utils";
+import { SmartImage } from "@/components/content/SmartImage";
 import type { ArticleCardData } from "@/lib/queries";
 
 function PremiumTag() {
@@ -27,7 +27,7 @@ export function ArticleCard({
     <article className={cn("group flex flex-col", className)}>
       <Link href={href} className="img-hover relative block aspect-[16/10] overflow-hidden rounded-lg bg-stone-100">
         {article.featuredImage && (
-          <Image
+          <SmartImage
             src={article.featuredImage}
             alt={article.title}
             fill
@@ -109,7 +109,7 @@ export function ArticleCompact({ article }: { article: ArticleCardData }) {
     <article className="group flex items-start gap-3">
       <Link href={href} className="img-hover relative block h-20 w-28 shrink-0 overflow-hidden rounded-md bg-stone-100">
         {article.featuredImage && (
-          <Image src={article.featuredImage} alt={article.title} fill sizes="112px" className="object-cover" />
+          <SmartImage src={article.featuredImage} alt={article.title} fill sizes="112px" className="object-cover" />
         )}
       </Link>
       <div className="min-w-0 flex-1">

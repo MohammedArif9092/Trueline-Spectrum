@@ -1,8 +1,8 @@
 import Link from "next/link";
-import Image from "next/image";
 import { getArticlesBySection } from "@/lib/queries";
 import { SectionHeading } from "@/components/content/SectionHeading";
 import { ArticleCompact } from "@/components/content/ArticleCard";
+import { SmartImage } from "@/components/content/SmartImage";
 import { formatDateShort, links } from "@/lib/utils";
 
 /** Editorial spotlight for an article-backed section (Education, Industry, …). */
@@ -29,7 +29,7 @@ export async function SectionSpotlight({
         <article className="group">
           <Link href={links.article(lead.slug)} className="img-hover relative block aspect-[16/9] overflow-hidden rounded-lg bg-stone-100">
             {lead.featuredImage && (
-              <Image src={lead.featuredImage} alt={lead.title} fill sizes="(max-width:1024px) 100vw, 50vw" className="object-cover" />
+              <SmartImage src={lead.featuredImage} alt={lead.title} fill sizes="(max-width:1024px) 100vw, 50vw" className="object-cover" />
             )}
           </Link>
           {lead.category && <span className="badge-cat mt-4 inline-block">{lead.category.name}</span>}

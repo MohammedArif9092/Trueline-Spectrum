@@ -1,7 +1,7 @@
 import Link from "next/link";
-import Image from "next/image";
 import { ArrowRight, Clock, Lock } from "lucide-react";
 import { formatDate, links } from "@/lib/utils";
+import { SmartImage } from "@/components/content/SmartImage";
 import type { ArticleCardData } from "@/lib/queries";
 import { ArticleListItem } from "@/components/content/ArticleCard";
 
@@ -24,7 +24,7 @@ export function Hero({
         <div className="lg:col-span-2">
           <Link href={href} className="img-hover relative block aspect-[16/9] overflow-hidden rounded-xl bg-stone-100">
             {featured.featuredImage && (
-              <Image
+              <SmartImage
                 src={featured.featuredImage}
                 alt={featured.title}
                 fill
@@ -78,7 +78,7 @@ export function Hero({
         <aside className="lg:col-span-1">
           <div className="rounded-xl border border-stone-100 bg-stone-50/50 p-5">
             <h2 className="mb-1 text-xs font-bold uppercase tracking-widest text-green-600">
-              More Headlines
+              More This Month
             </h2>
             <div className="mt-2">
               {side.slice(0, 5).map((a) => (

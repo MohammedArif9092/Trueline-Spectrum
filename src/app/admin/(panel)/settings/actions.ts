@@ -8,6 +8,9 @@ import { audit } from "@/lib/audit";
 const KEYS = [
   "siteName", "tagline", "contactEmail", "footerAbout",
   "social_linkedin", "social_x", "social_youtube",
+  // Founder / Leadership section (About page)
+  "founderName", "founderTitle", "founderMessage",
+  "founderPhoto", "founderLinkedin", "founderEmail",
 ];
 
 export async function saveSettings(fd: FormData) {
@@ -22,5 +25,6 @@ export async function saveSettings(fd: FormData) {
   }
   await audit({ adminId: s.sub, action: "UPDATE", entity: "SiteSetting", detail: "settings saved" });
   revalidatePath("/");
+  revalidatePath("/about");
   revalidatePath("/admin/settings");
 }

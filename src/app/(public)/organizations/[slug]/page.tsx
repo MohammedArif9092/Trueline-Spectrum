@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import Image from "next/image";
 import { MapPin, Globe, Mail, Phone, Award, Calendar } from "lucide-react";
 import { prisma } from "@/lib/db";
 import { links } from "@/lib/utils";
+import { SmartImage } from "@/components/content/SmartImage";
 import { SITE, ORG_TYPES } from "@/lib/constants";
 import { PageHeader } from "@/components/content/PageHeader";
 
@@ -53,7 +53,7 @@ export default async function Page({ params }: Params) {
           <div>
             {o.coverImage && (
               <div className="relative mb-8 aspect-[16/7] overflow-hidden rounded-xl bg-stone-100">
-                <Image src={o.coverImage} alt={o.name} fill priority sizes="(max-width:1024px) 100vw, 720px" className="object-cover" />
+                <SmartImage src={o.coverImage} alt={o.name} fill priority sizes="(max-width:1024px) 100vw, 720px" className="object-cover" />
               </div>
             )}
             {o.description && (
@@ -80,7 +80,7 @@ export default async function Page({ params }: Params) {
             <div className="sticky top-40 rounded-xl border border-stone-100 bg-stone-50 p-6">
               <div className="flex items-center gap-4">
                 <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-xl bg-white shadow-card">
-                  {o.logo && <Image src={o.logo} alt={o.name} fill sizes="64px" className="object-cover" />}
+                  {o.logo && <SmartImage src={o.logo} alt={o.name} fill sizes="64px" className="object-cover" />}
                 </div>
                 <div>
                   <p className="text-xs font-bold uppercase tracking-wider text-green-600">{typeLabel}</p>

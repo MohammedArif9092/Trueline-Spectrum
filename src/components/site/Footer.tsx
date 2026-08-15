@@ -2,16 +2,11 @@ import Link from "next/link";
 import { Linkedin, Youtube, Mail } from "lucide-react";
 import { Logo } from "@/components/Logo";
 import { SITE, SECTIONS } from "@/lib/constants";
-import { prisma } from "@/lib/db";
+import { getSiteSettings } from "@/lib/queries";
 import { NewsletterForm } from "./NewsletterForm";
 
-async function getSettings() {
-  const rows = await prisma.siteSetting.findMany();
-  return Object.fromEntries(rows.map((r) => [r.key, r.value]));
-}
-
 export async function Footer() {
-  const s = await getSettings();
+  const s = await getSiteSettings();
 
   const explore = [
     ...SECTIONS.map((x) => ({ label: x.label, href: x.href })),
@@ -21,6 +16,7 @@ export async function Footer() {
   ];
 
   const company = [
+    { label: "About & Leadership", href: "/about" },
     { label: "Premium Plans", href: "/premium" },
     { label: "Search", href: "/search" },
     { label: "Advertise With Us", href: "/premium#advertise" },
@@ -35,8 +31,8 @@ export async function Footer() {
           <div>
             <h2 className="text-2xl font-bold text-white">Stay Updated</h2>
             <p className="mt-2 max-w-md text-white/70">
-              Subscribe to receive the latest technology, research, education and
-              industry insights from Trueline Spectrum.
+              Subscribe to be notified when each new monthly edition of Trueline
+              Spectrum goes live — technology, research, education and industry.
             </p>
           </div>
           <NewsletterForm source="footer" variant="dark" />

@@ -116,7 +116,7 @@ export const AD_PLACEMENTS = [
 export const HOMEPAGE_SECTIONS = [
   { key: "hero", title: "Featured Story" },
   { key: "topStories", title: "Top Stories" },
-  { key: "latest", title: "Latest News" },
+  { key: "latest", title: "Monthly Highlights" },
   { key: "research", title: "Research & Innovation" },
   { key: "education", title: "Education" },
   { key: "industry", title: "Industry" },

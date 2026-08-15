@@ -63,6 +63,118 @@ export function pad2(n: number): string {
   return n < 10 ? `0${n}` : `${n}`;
 }
 
+/**
+ * Remote hosts that next/image is allowed to OPTIMIZE.
+ * MUST stay in sync with `images.remotePatterns` in next.config.mjs.
+ *
+ * Note: an image URL does NOT need to be on this list to be displayed. Any
+ * other valid direct http(s) image URL is still shown — just served
+ * un-optimized (see `resolveImage`), so we never reject a legitimate URL merely
+ * for being on an un-configured host, and we never 500 the page.
+ */
+export const OPTIMIZABLE_IMAGE_HOSTS = new Set([
+  "images.unsplash.com",
+  "picsum.photos",
+  "lh3.googleusercontent.com", // Google Drive image content endpoint
+]);
+
+/** Local placeholder shown when an image URL is missing, malformed or unsupported. */
+export const FALLBACK_IMAGE = "/placeholder.svg";
+
+/** Google Images thumbnail / cached-thumbnail hosts — never a permanent source. */
+const GOOGLE_THUMBNAIL_HOST = /(^|\.)gstatic\.com$/i;
+
+/**
+ * Turn a shared Google Drive file URL into a direct image-serving URL, or return
+ * null if it is not a recognisable Drive file link.
+ *
+ * Handles the common public forms:
+ *   https://drive.google.com/file/d/FILE_ID/view?usp=sharing
+ *   https://drive.google.com/open?id=FILE_ID
+ *   https://drive.google.com/uc?export=view&id=FILE_ID
+ *   https://drive.google.com/thumbnail?id=FILE_ID
+ *
+ * The result points at Google's public content host (lh3.googleusercontent.com),
+ * which streams the file bytes directly for *publicly shared* files. Private
+ * files simply fail to load and fall back to the placeholder — they are never
+ * exposed.
+ */
+export function googleDriveImageUrl(raw: string): string | null {
+  let url: URL;
+  try {
+    url = new URL(raw);
+  } catch {
+    return null;
+  }
+  if (url.hostname.toLowerCase() !== "drive.google.com") return null;
+  const fromPath = url.pathname.match(/\/d\/([a-zA-Z0-9_-]+)/);
+  const id = fromPath?.[1] ?? url.searchParams.get("id");
+  if (!id) return null;
+  return `https://lh3.googleusercontent.com/d/${id}`;
+}
+
+export type ResolvedImage = { src: string; unoptimized: boolean };
+
+/**
+ * Resolve a raw (possibly CMS-entered) image URL into something safe to hand to
+ * next/image, plus whether it must be rendered un-optimized.
+ *
+ * Rules:
+ *  - empty / malformed / non-http(s)            → local placeholder
+ *  - Google Images thumbnail (gstatic)          → local placeholder (unsupported)
+ *  - Google Drive share link                    → converted content URL (optimized)
+ *  - known optimizable host                      → optimized
+ *  - any other valid direct image URL            → shown, but UN-optimized so it
+ *      needs no remotePatterns entry and can never 500 the page
+ */
+export function resolveImage(
+  src: string | null | undefined,
+  fallback: string = FALLBACK_IMAGE
+): ResolvedImage {
+  if (!src) return { src: fallback, unoptimized: false };
+  const s = src.trim();
+  if (!s) return { src: fallback, unoptimized: false };
+  // Local/relative paths are optimizable; inline data URIs are served as-is.
+  if (s.startsWith("/")) return { src: s, unoptimized: false };
+  if (s.startsWith("data:")) return { src: s, unoptimized: true };
+
+  let url: URL;
+  try {
+    url = new URL(s);
+  } catch {
+    return { src: fallback, unoptimized: false };
+  }
+  if (url.protocol !== "http:" && url.protocol !== "https:") {
+    return { src: fallback, unoptimized: false };
+  }
+  const host = url.hostname.toLowerCase();
+
+  // Google Images thumbnails are not stable sources — refuse and fall back.
+  if (GOOGLE_THUMBNAIL_HOST.test(host)) return { src: fallback, unoptimized: false };
+
+  // Google Drive share links → direct content URL (optimizable host).
+  const drive = googleDriveImageUrl(s);
+  if (drive) return { src: drive, unoptimized: false };
+
+  // Trusted, pre-configured hosts get optimized via next/image.
+  if (OPTIMIZABLE_IMAGE_HOSTS.has(host)) return { src: s, unoptimized: false };
+
+  // Any other valid direct http(s) image URL is accepted, but rendered
+  // un-optimized so it does not require a next.config remotePatterns entry.
+  return { src: s, unoptimized: true };
+}
+
+/**
+ * Return only the resolved src string (back-compat helper). Prefer the
+ * `SmartImage` component, which also applies the optimize/error-fallback logic.
+ */
+export function safeImage(
+  src: string | null | undefined,
+  fallback: string = FALLBACK_IMAGE
+): string {
+  return resolveImage(src, fallback).src;
+}
+
 /** Canonical URL builders (single source of truth for content routes). */
 export const links = {
   article: (slug: string) => `/news/${slug}`,

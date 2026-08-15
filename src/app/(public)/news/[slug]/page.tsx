@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
+import { after } from "next/server";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import Image from "next/image";
 import { Clock, Lock, Tag as TagIcon } from "lucide-react";
+import { SmartImage } from "@/components/content/SmartImage";
 import {
   getArticleBySlug,
   getRelatedArticles,
@@ -53,7 +54,9 @@ export default async function ArticlePage({ params }: Params) {
   const article = await getArticleBySlug(slug);
   if (!article) notFound();
 
-  await incrementArticleViews(article.id);
+  // Record the view without blocking the response — the increment runs after
+  // the page is streamed, so it stays off the critical render path.
+  after(() => incrementArticleViews(article.id));
   const related = await getRelatedArticles(article.id, article.categoryId, 3);
 
   const jsonLd = {
@@ -104,7 +107,7 @@ export default async function ArticlePage({ params }: Params) {
           <div className="mt-6 flex flex-wrap items-center justify-between gap-4 border-y border-stone-100 py-4">
             <div className="flex items-center gap-3">
               {article.author?.avatar && (
-                <Image src={article.author.avatar} alt={article.author.name} width={44} height={44} className="h-11 w-11 rounded-full object-cover" />
+                <SmartImage src={article.author.avatar} alt={article.author.name} width={44} height={44} className="h-11 w-11 rounded-full object-cover" />
               )}
               <div className="text-sm">
                 {article.author && <p className="font-semibold text-navy">{article.author.name}</p>}
@@ -126,7 +129,7 @@ export default async function ArticlePage({ params }: Params) {
       {article.featuredImage && (
         <figure className="container-editorial mt-8">
           <div className="relative mx-auto aspect-[16/9] max-w-4xl overflow-hidden rounded-xl bg-stone-100">
-            <Image src={article.featuredImage} alt={article.title} fill priority sizes="(max-width:1024px) 100vw, 896px" className="object-cover" />
+            <SmartImage src={article.featuredImage} alt={article.title} fill priority sizes="(max-width:1024px) 100vw, 896px" className="object-cover" />
           </div>
           {article.imageCaption && (
             <figcaption className="mx-auto mt-2 max-w-4xl text-center text-xs text-stone-400">
@@ -168,7 +171,7 @@ export default async function ArticlePage({ params }: Params) {
               <div className="mx-auto mt-10 max-w-reading rounded-xl border border-stone-100 bg-stone-50 p-6">
                 <div className="flex items-start gap-4">
                   {article.author.avatar && (
-                    <Image src={article.author.avatar} alt={article.author.name} width={56} height={56} className="h-14 w-14 rounded-full object-cover" />
+                    <SmartImage src={article.author.avatar} alt={article.author.name} width={56} height={56} className="h-14 w-14 rounded-full object-cover" />
                   )}
                   <div>
                     <p className="font-bold text-navy">{article.author.name}</p>

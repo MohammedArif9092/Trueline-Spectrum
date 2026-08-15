@@ -1,8 +1,8 @@
 import Link from "next/link";
-import Image from "next/image";
 import { Rocket, MapPin, ArrowUpRight } from "lucide-react";
 import { getStartupOrganizations } from "@/lib/queries";
 import { SectionHeading } from "@/components/content/SectionHeading";
+import { SmartImage } from "@/components/content/SmartImage";
 import { links } from "@/lib/utils";
 
 export async function StartupSpotlight() {
@@ -25,7 +25,7 @@ export async function StartupSpotlight() {
           >
             <div className="flex items-center justify-between">
               <div className="relative h-12 w-12 overflow-hidden rounded-lg bg-stone-100">
-                {s.logo && <Image src={s.logo} alt={s.name} fill sizes="48px" className="object-cover" />}
+                {s.logo && <SmartImage src={s.logo} alt={s.name} fill sizes="48px" className="object-cover" />}
               </div>
               <span className="rounded-full bg-green-50 p-1.5 text-green-600 transition-colors group-hover:bg-green group-hover:text-white">
                 <ArrowUpRight className="h-4 w-4" />

@@ -1,7 +1,7 @@
 import Link from "next/link";
-import Image from "next/image";
 import { Building2 } from "lucide-react";
 import { links } from "@/lib/utils";
+import { SmartImage } from "@/components/content/SmartImage";
 import { RESEARCH_CATEGORIES } from "@/lib/constants";
 
 type ResearchData = {
@@ -23,7 +23,7 @@ export function ResearchCard({ item }: { item: ResearchData }) {
     <article className="group flex flex-col">
       <Link href={links.research(item.slug)} className="img-hover relative block aspect-[16/10] overflow-hidden rounded-lg bg-stone-100">
         {item.featuredImage && (
-          <Image src={item.featuredImage} alt={item.title} fill sizes="(max-width:768px) 100vw, 33vw" className="object-cover" />
+          <SmartImage src={item.featuredImage} alt={item.title} fill sizes="(max-width:768px) 100vw, 33vw" className="object-cover" />
         )}
         <span className="absolute left-3 top-3 rounded bg-green px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-white">
           {catLabel(item.researchCategory)}

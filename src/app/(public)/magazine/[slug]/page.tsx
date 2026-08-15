@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import Image from "next/image";
 import { BookOpen, List } from "lucide-react";
 import { getMagazineBySlug } from "@/lib/queries";
 import { PageHeader } from "@/components/content/PageHeader";
+import { SmartImage } from "@/components/content/SmartImage";
 import { links } from "@/lib/utils";
 import { SITE } from "@/lib/constants";
 
@@ -40,7 +40,7 @@ export default async function Page({ params }: Params) {
           {/* Cover + CTA */}
           <div>
             <div className="relative aspect-[3/4] overflow-hidden rounded-xl bg-stone-100 shadow-lift">
-              <Image src={m.coverImage} alt={m.editionTitle} fill sizes="320px" className="object-cover" priority />
+              <SmartImage src={m.coverImage} alt={m.editionTitle} fill sizes="320px" className="object-cover" priority />
             </div>
             <Link href={links.magazineRead(m.slug)} className="btn-primary mt-5 w-full">
               <BookOpen className="h-4 w-4" /> Read Magazine

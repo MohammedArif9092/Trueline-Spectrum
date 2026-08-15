@@ -8,8 +8,11 @@ import { Logo } from "@/components/Logo";
 import { SECTIONS } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 
+// Home → About → News → Technology → AI → Research → Education → Industry →
+// Startups → Magazine → Events → More
 const PRIMARY = [
   { label: "Home", href: "/" },
+  { label: "About", href: "/about" },
   ...SECTIONS.map((s) => ({ label: s.label, href: s.href })),
   { label: "Magazine", href: "/magazine" },
   { label: "Events", href: "/events" },

@@ -1,7 +1,7 @@
 import Link from "next/link";
-import Image from "next/image";
 import { BookOpen, ArrowRight } from "lucide-react";
 import { getCurrentMagazine } from "@/lib/queries";
+import { SmartImage } from "@/components/content/SmartImage";
 import { links } from "@/lib/utils";
 
 export async function MagazineTeaser() {
@@ -15,7 +15,7 @@ export async function MagazineTeaser() {
           {/* Cover */}
           <div className="relative flex items-center justify-center bg-navy p-8 lg:p-12">
             <div className="relative aspect-[3/4] w-full max-w-[300px] overflow-hidden rounded-lg shadow-lift">
-              <Image
+              <SmartImage
                 src={mag.coverImage}
                 alt={`${mag.editionTitle} cover`}
                 fill

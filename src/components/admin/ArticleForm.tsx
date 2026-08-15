@@ -126,8 +126,12 @@ export function ArticleForm({
         </Card>
 
         <Card className="space-y-4">
-          <Field label="Featured Image URL" htmlFor="featuredImage">
-            <Input id="featuredImage" name="featuredImage" defaultValue={a?.featuredImage ?? ""} placeholder="https://…" />
+          <Field
+            label="Featured Image URL"
+            htmlFor="featuredImage"
+            hint="Use a direct image URL or a publicly accessible Google Drive image. Google Images thumbnail URLs may not work reliably."
+          >
+            <Input id="featuredImage" name="featuredImage" defaultValue={a?.featuredImage ?? ""} placeholder="https://example.com/image.jpg" />
           </Field>
           <Field label="Image Caption" htmlFor="imageCaption">
             <Input id="imageCaption" name="imageCaption" defaultValue={a?.imageCaption ?? ""} />

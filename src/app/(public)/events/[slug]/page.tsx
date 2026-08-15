@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import Image from "next/image";
 import { Calendar, MapPin, Clock, User, ExternalLink } from "lucide-react";
 import { prisma } from "@/lib/db";
 import { formatDate, links } from "@/lib/utils";
+import { SmartImage } from "@/components/content/SmartImage";
 import { SITE, EVENT_CATEGORIES } from "@/lib/constants";
 import { PageHeader } from "@/components/content/PageHeader";
 import { ShareButtons } from "@/components/content/ShareButtons";
@@ -62,7 +62,7 @@ export default async function Page({ params }: Params) {
           <div>
             {e.image && (
               <div className="relative mb-8 aspect-[16/9] overflow-hidden rounded-xl bg-stone-100">
-                <Image src={e.image} alt={e.name} fill priority sizes="(max-width:1024px) 100vw, 720px" className="object-cover" />
+                <SmartImage src={e.image} alt={e.name} fill priority sizes="(max-width:1024px) 100vw, 720px" className="object-cover" />
               </div>
             )}
             <div className="prose-editorial">

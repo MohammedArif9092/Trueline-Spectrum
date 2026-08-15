@@ -1,7 +1,7 @@
 import Link from "next/link";
-import Image from "next/image";
 import { MapPin, ArrowUpRight } from "lucide-react";
 import { links } from "@/lib/utils";
+import { SmartImage } from "@/components/content/SmartImage";
 import { ORG_TYPES } from "@/lib/constants";
 
 type OrgData = {
@@ -26,7 +26,7 @@ export function OrgCard({ org }: { org: OrgData }) {
     >
       <div className="flex items-center justify-between">
         <div className="relative h-12 w-12 overflow-hidden rounded-lg bg-stone-100">
-          {org.logo && <Image src={org.logo} alt={org.name} fill sizes="48px" className="object-cover" />}
+          {org.logo && <SmartImage src={org.logo} alt={org.name} fill sizes="48px" className="object-cover" />}
         </div>
         <span className="rounded-full bg-green-50 p-1.5 text-green-600 transition-colors group-hover:bg-green group-hover:text-white">
           <ArrowUpRight className="h-4 w-4" />

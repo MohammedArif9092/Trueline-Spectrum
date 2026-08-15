@@ -9,7 +9,7 @@ export function TopStories({ stories }: { stories: ArticleCardData[] }) {
     <section className="container-editorial mt-16">
       <div className="grid gap-10 lg:grid-cols-3">
         <div className="lg:col-span-2">
-          <SectionHeading kicker="What matters now" title="Top Stories" href="/news" />
+          <SectionHeading kicker="Editor's picks" title="This Month's Top Stories" href="/news" />
           <div>
             {stories.map((a, i) => (
               <ArticleListItem key={a.id} article={a} rank={i + 1} />

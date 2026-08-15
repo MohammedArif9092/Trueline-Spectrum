@@ -1,8 +1,8 @@
 import Link from "next/link";
-import Image from "next/image";
 import { FlaskConical, Building2 } from "lucide-react";
 import { getResearch } from "@/lib/queries";
 import { SectionHeading } from "@/components/content/SectionHeading";
+import { SmartImage } from "@/components/content/SmartImage";
 import { links } from "@/lib/utils";
 import { RESEARCH_CATEGORIES } from "@/lib/constants";
 
@@ -23,7 +23,7 @@ export async function ResearchInnovation() {
             <span className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-green">
               <FlaskConical className="h-4 w-4" /> Discovery & Innovation
             </span>
-            <h2 className="mt-1 text-2xl font-bold text-white sm:text-3xl">Research &amp; Innovation</h2>
+            <h2 className="mt-1 text-2xl font-bold text-white sm:text-3xl">Research Highlights</h2>
           </div>
           <Link href="/research" className="text-sm font-semibold text-green hover:text-white">
             View all research →
@@ -35,7 +35,7 @@ export async function ResearchInnovation() {
           <Link href={links.research(lead.slug)} className="group block">
             <div className="img-hover relative aspect-[16/9] overflow-hidden rounded-xl bg-navy-600">
               {lead.featuredImage && (
-                <Image src={lead.featuredImage} alt={lead.title} fill sizes="(max-width:1024px) 100vw, 50vw" className="object-cover" />
+                <SmartImage src={lead.featuredImage} alt={lead.title} fill sizes="(max-width:1024px) 100vw, 50vw" className="object-cover" />
               )}
             </div>
             <span className="mt-4 inline-block text-xs font-bold uppercase tracking-wider text-green">
@@ -62,7 +62,7 @@ export async function ResearchInnovation() {
               >
                 <div className="img-hover relative h-24 w-32 shrink-0 overflow-hidden rounded-lg bg-navy-600">
                   {r.featuredImage && (
-                    <Image src={r.featuredImage} alt={r.title} fill sizes="128px" className="object-cover" />
+                    <SmartImage src={r.featuredImage} alt={r.title} fill sizes="128px" className="object-cover" />
                   )}
                 </div>
                 <div className="min-w-0">
