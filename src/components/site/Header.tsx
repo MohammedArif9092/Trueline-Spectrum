@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
-import { Search, Menu, X, ChevronDown, Crown } from "lucide-react";
+import { Search, Menu, X, ChevronDown, ChevronRight, Crown } from "lucide-react";
 import { Logo } from "@/components/Logo";
 import { SECTIONS } from "@/lib/constants";
 import { cn } from "@/lib/utils";
@@ -26,9 +26,19 @@ const MORE = [
   { label: "Rankings", href: "/category/rankings" },
 ];
 
+// External Trueline Group organizations (open in a new tab, exact order).
+const TRUELINE_GROUP = [
+  { label: "Trueline Research", href: "https://truelineresearch.in/" },
+  { label: "Trueline Publisher", href: "https://www.truelinepublisher.in/" },
+  { label: "Trueline Spectrum", href: "https://truelinespectrum.in/" },
+  { label: "Jaeid Journal", href: "https://www.jaeid.com/" },
+  { label: "StartNet Ventures", href: "https://startnetx.in/" },
+];
+
 export function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [moreOpen, setMoreOpen] = useState(false);
+  const [groupOpen, setGroupOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [q, setQ] = useState("");
   const router = useRouter();
@@ -53,6 +63,38 @@ export function Header() {
         <Logo className="h-12 lg:h-14" priority />
 
         <div className="flex items-center gap-1 sm:gap-2">
+          {/* Trueline Group dropdown */}
+          <div
+            className="relative hidden lg:block"
+            onMouseEnter={() => setGroupOpen(true)}
+            onMouseLeave={() => setGroupOpen(false)}
+          >
+            <button
+              aria-haspopup="true"
+              aria-expanded={groupOpen}
+              onClick={() => setGroupOpen((v) => !v)}
+              className="flex items-center gap-1 rounded-md px-2 py-2 text-sm font-semibold text-navy hover:text-green-600"
+            >
+              Trueline Group
+              <ChevronDown className={cn("h-4 w-4 transition-transform", groupOpen && "rotate-180")} />
+            </button>
+            {groupOpen && (
+              <div className="absolute right-0 top-full z-50 w-60 max-w-[calc(100vw-2rem)] rounded-md border border-stone-100 bg-white py-2 shadow-lift">
+                {TRUELINE_GROUP.map((g) => (
+                  <a
+                    key={g.href}
+                    href={g.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center justify-between gap-2 px-4 py-2 text-sm text-navy hover:bg-navy-50 hover:text-green-600"
+                  >
+                    {g.label}
+                    <ChevronRight className="h-4 w-4 shrink-0 text-stone-400" />
+                  </a>
+                ))}
+              </div>
+            )}
+          </div>
           <button
             aria-label="Search"
             onClick={() => setSearchOpen((v) => !v)}
@@ -177,6 +219,28 @@ export function Header() {
             >
               <Crown className="h-4 w-4" /> Premium Plans
             </Link>
+
+            {/* Trueline Group (external) */}
+            <div className="mt-6 border-t border-stone-100 pt-4">
+              <p className="mb-2 px-2 text-xs font-bold uppercase tracking-wider text-stone-400">
+                Trueline Group
+              </p>
+              <div className="grid gap-1">
+                {TRUELINE_GROUP.map((g) => (
+                  <a
+                    key={g.href}
+                    href={g.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={() => setMobileOpen(false)}
+                    className="flex items-center justify-between gap-2 rounded-md px-2 py-2 text-sm font-semibold text-navy hover:text-green-600"
+                  >
+                    {g.label}
+                    <ChevronRight className="h-4 w-4 shrink-0 text-stone-400" />
+                  </a>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       )}
